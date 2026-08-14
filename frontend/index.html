@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EquiTrack | Portfolio Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">EquiTrack</div>
+    <div class="user-pill" id="userPill">Loading user…</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" id="portfolioPanel">
+      <div class="panel-header">
+        <h2>Portfolios</h2>
+        <button id="newPortfolioBtn" class="btn-primary">+ New</button>
+      </div>
+      <ul id="portfolioList" class="portfolio-list"></ul>
+    </section>
+
+    <section class="panel main-panel">
+      <div class="panel-header">
+        <h2 id="activePortfolioName">Select a portfolio</h2>
+        <button id="addHoldingBtn" class="btn-secondary" disabled>+ Add Holding</button>
+      </div>
+
+      <div class="metrics-grid" id="metricsGrid">
+        <div class="metric-card">
+          <span class="metric-label">Diversification Score</span>
+          <span class="metric-value" id="diversificationValue">--</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Max Concentration</span>
+          <span class="metric-value" id="concentrationValue">--</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Annualized Volatility</span>
+          <span class="metric-value" id="volatilityValue">--</span>
+        </div>
+      </div>
+
+      <h3>Sector Exposure</h3>
+      <div id="sectorExposure" class="sector-bars"></div>
+
+      <h3>Holdings</h3>
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Sector</th>
+            <th>Quantity</th>
+            <th>Cost Basis</th>
+            <th>Market Price</th>
+            <th>Change %</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Add Holding Modal -->
+  <dialog id="holdingDialog">
+    <form id="holdingForm" method="dialog">
+      <h3>Add Holding</h3>
+      <label>Symbol <input type="text" id="symbolInput" required /></label>
+      <label>Sector <input type="text" id="sectorInput" required /></label>
+      <label>Quantity <input type="number" step="0.0001" id="quantityInput" required /></label>
+      <label>Cost Basis (per share) <input type="number" step="0.01" id="costBasisInput" required /></label>
+      <div class="dialog-actions">
+        <button type="button" id="cancelHoldingBtn">Cancel</button>
+        <button type="submit" class="btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

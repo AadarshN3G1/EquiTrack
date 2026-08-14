@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: equitrack-backend
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:equitrack}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USER:equitrack}
+    password: ${DB_PASSWORD:equitrack}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  cache:
+    type: redis
+
+equitrack:
+  frontend:
+    origin: ${FRONTEND_ORIGIN:http://localhost:3000}
+  market-data:
+    base-url: ${MARKET_DATA_BASE_URL:https://www.alphavantage.co}
+    api-key: ${MARKET_DATA_API_KEY:demo}
+  analytics-service:
+    base-url: ${ANALYTICS_SERVICE_URL:http://localhost:8000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

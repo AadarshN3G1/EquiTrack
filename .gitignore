@@ -1,0 +1,10 @@
+target/
+*.class
+.idea/
+*.iml
+out/
+__pycache__/
+venv/
+.env
+node_modules/
+.DS_Store

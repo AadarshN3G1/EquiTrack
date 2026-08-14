@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: equitrack-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: equitrack
+      MYSQL_USER: equitrack
+      MYSQL_PASSWORD: equitrack
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: equitrack-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  analytics-service:
+    build: ./analytics-service
+    container_name: equitrack-analytics
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+  backend:
+    build: ./backend
+    container_name: equitrack-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      analytics-service:
+        condition: service_started
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: equitrack
+      DB_USER: equitrack
+      DB_PASSWORD: equitrack
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ANALYTICS_SERVICE_URL: http://analytics-service:8000
+      FRONTEND_ORIGIN: http://localhost:3000
+      MARKET_DATA_API_KEY: demo
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: equitrack-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  mysql-data:
